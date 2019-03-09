@@ -1,4 +1,4 @@
-from optparse import OptionParser
+from optparse import OptionParser, check_choice
 ''' 
 parser = OptionParser()
 parser.add_option("-f", "--file", default=False, dest="filename",
@@ -9,13 +9,24 @@ parser.add_option("-q", "--quiet",
 
 (options, args) = parser.parse_args()
 '''
+parser = OptionParser() # Keep global copy of option parser for ease of add of options
+
 lineLength = 80
 indention = 22
 
 jakstabHome = None
+
+
 # To do later
 
 # Ignore Map line 53
+
+def addOption(arglist, **kwargs):
+    check_choice(None, None, '-h')
+    if isinstance(arglist[0], str):
+        pass
+    if len(arglist)>1 and isinstance(arglist[1], str):
+        pass
 
 def parseOptions():
     mainFilename = None
@@ -23,8 +34,11 @@ def parseOptions():
 
     arguments = None
 
-    parser = OptionParser()
     parser.remove_option('-h')
+    
+    # OptionGroup, group.add_option, parser.add_option_group(group)
+    # Group options for more intuitive help
+
     parser.add_option("--help", action="help", help="Prints this help message.")
     parser.add_option("-m", "--mainFilename", default=False, dest="mainFilename",help="write report to FILE", metavar="FILE")
     parser.add_option("-w", "--wdm", action="store_true", default=False, dest="wdm", help="WDM mode, export main function as DriverMain.")
@@ -44,5 +58,5 @@ def parseOptions():
     parser.add_option("--bot-heap", action="store_true", default=False, dest="initHeapToBot", help="Initialize heap cells to BOT to force strong updates.")
     parser.add_option("--summarize-rep", action="store_true", default=False, dest="summarizeRep", help="Use summarizing transformer for string instructions.")
     parser.add_option("--basicblocks", action="store_true", default=False, dest="basicBlocks", help="Build CFA from basic-blocks instead of single statements.")
-
+    #addOption(["--basicblocks"], action="store_true", default=False, dest="basicBlocks", help="Build CFA from basic-blocks instead of single statements.")
     return parser.parse_args()
