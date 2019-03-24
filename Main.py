@@ -1,6 +1,11 @@
 import logging as logger
 import stats_tracker 
 import options
+import sys
+sys.path.append('ssl')
+import Architecture
+import time
+
 
 version = '0.8.4-devl'
 activeAlgorithm = None
@@ -24,11 +29,17 @@ def main():
     st = stats_tracker.StatsTracker()
     stats = st.getInstance()
     
-    options.parseOptions()
+    opts = options.parseOptions()
+    try:
+        arch = Architecture.Architecture(opts.sslFilename) 
+    except OSError as e:
+        logger.critical('Unable to open SSL file!',e)
+        return
+    except:
+        logger.critical('Error parsing SSL file!',e)
+        return
     
-
-
-
+    overallStartTime = time.time()
 if __name__ == "__main__":
     main()
 
