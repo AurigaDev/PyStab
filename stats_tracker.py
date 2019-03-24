@@ -1,18 +1,17 @@
-import logging
+import logging as logger
+
+class SingletonHolder:
+    pass
 
 class StatsTracker:
+     
     
-    class SingletonHolder:
-        def __init__(self):
-            INSTANCE = StatsTracker()
+    sh = SingletonHolder()
 
-    self.stats_buider = None
-    self.named_vals = {}
-    
     def __init__(self):
         self.stats_buider = ""
         self.named_vals = {}
-        logging.info(type(self))
+        logger.info(type(self))
 
     def record(self, obj):
         self.stats_buider += "%s,"%str(obj)
@@ -25,3 +24,12 @@ class StatsTracker:
             record(self.named_vals[key])
         
         logger.critical(self.stats_buider)
+        
+    @classmethod         
+    def getInstance(cls):
+        return SingletonHolder.INSTANCE 
+    
+class SingletonHolder:
+    INSTANCE = None       
+    def __init__(self):
+        INSTANCE = StatsTracker()
