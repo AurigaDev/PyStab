@@ -11,7 +11,7 @@ class StatsTracker:
     def __init__(self):
         self.stats_buider = ""
         self.named_vals = {}
-        logger.info(type(self))
+     
 
     def record(self, obj):
         self.stats_buider += "%s,"%str(obj)

@@ -5,11 +5,13 @@ import sys
 sys.path.append('ssl')
 import Architecture
 import time
+import program
 
 
 version = '0.8.4-devl'
 activeAlgorithm = None
 mainThread = None
+
 
 def logBanner():
     logger.error('30') # Will fix later
@@ -40,6 +42,8 @@ def main():
         return
     
     overallStartTime = time.time()
+    _program = program.create_program(arch)
+
 if __name__ == "__main__":
     main()
 
