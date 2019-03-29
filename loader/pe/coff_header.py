@@ -46,7 +46,6 @@ class COFF_Header:
     return not ((self.characteristics & COFF_Header.IMAGE_FILE_DLL) == 0)
     
   def is_x86(self):
-    print(self.machine)
     return self.machine == COFF_Header.IMAGE_FILE_MACHINE_I386
 
   def get_pointer_to_symbol_table(self):
