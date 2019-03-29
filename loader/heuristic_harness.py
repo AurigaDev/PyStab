@@ -18,8 +18,8 @@ class HeuristicHarness(Harness):
         seq.add_last(RTLVariableAssignment(rtl_var.get_bit_width(), 
                      rtl_var, ExpressionFactory.nondet(rtl_var.get_bit_width())))
 
-    def put_sequence(seq, rtl_var):
-        
+    def put_sequence(program, seq, address):
+        pass
 
 
     def contains(abs_addr):
