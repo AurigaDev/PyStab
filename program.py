@@ -2,6 +2,25 @@ import logging
 import sys
 
 from loader.pe.pe_module import PEModule
+from enum import Enum
+from loader.elf.elf_module import ELFModule
+
+class TargetOS(Enum):
+    WINDOWS = 1
+    LINUX = 2
+    UNKNOWN = 3
+    
+def create_program(arch):
+    """ Initailize program with architecture object
+          Input -
+            arch (Architecture obj) - physical architecture program runs on
+                                      encapsulates all specifics of analysis 
+          Output -
+            program_instance (Program obj) - Project interface handle
+    """
+    program_instance = Program(arch)
+    return program_instance
+
 
 class Program:
     program_instance = None
@@ -45,20 +64,10 @@ class Program:
             main_module (ExecutableImage obj) - hanle to module with entry point
         """
         return self.main_module
+    
     #############################################################
     #                       Core Logic
     #############################################################
-
-    def create_program(arch):
-        """ Initailize program with architecture object
-          Input -
-            arch (Architecture obj) - physical architecture program runs on
-                                      encapsulates all specifics of analysis 
-          Output -
-            program_instance (Program obj) - Project interface handle
-        """
-        program_instance = Program(arch)
-        return program_instance
 
     def __init__(self, arch):
         """ Instance method that initalizes a program object, constructor
@@ -72,7 +81,7 @@ class Program:
         self.arch = arch
 
         # must define target_os module unknown
-        self.target_os = target_os.unknown
+        self.target_os = TargetOS.UNKNOWN
         
         # list of executable images
         self.modules = []
@@ -87,10 +96,10 @@ class Program:
         self.exported_symbols = {}
 
         # set of unresolved symbols objects
-        self.unresolve_symbols = set()
+        self.unresolved_symbols = set()
 
         # set of rtl_labels
-        self.unresolve_branches = set()
+        self.unresolved_branches = set()
 
     def remove_decoration(s):
         """ processes out @ portion of symbol name
@@ -126,27 +135,33 @@ class Program:
     
     def load_module(self, module_file):
         module = None
-
+        module = PEModule(module_file, self.get_arch())
+        
+        self.target_os = TargetOS.WINDOWS
         try:
             # TODO::Define Windows object file class
-            module = PEModule(module_file, get_arch())
-            _target_os = target_os.WINDOWS
+            module = PEModule(module_file, self.get_arch())
+           
+            self.target_os = TargetOS.WINDOWS
         except:
             try:
                 # TODO::Define object file class
-                module = ObjectFile(moduleFile, get_arch())
+                #module = ObjectFile(moduleFile, get_arch())
+                pass
             except:
                 # TODO::Define raw module class
-                module = RawModule(module_file, get_arch())
-        
+               # module = RawModule(module_file, get_arch())
+               pass
         for existing_module in self.modules:
-            if existing_module.get_max_addr().get_value() >= module.get_min_addr().get_value() \
-            and existing_module.get_min_addr().get_value() < module.get_max_addr().get_value():
+            if existing_module.get_max_addr() >= module.get_min_addr() \
+            and existing_module.get_min_addr() < module.get_max_addr():
                 raise Exception("Virtual Address of Modules Overlap!")
         
+        
         self.modules.append(module)
-        self.unresolve_symbols.add_all(module.get_unresolved_symbols())
-
+        self.unresolved_symbols.union(module.get_unresolved_symbols())
+        #TODO
+        
         for symbol in module.get_export_symbols():
             self.exported_symbols.add(remove_decoration(symbol.get_name()))
     
@@ -185,8 +200,8 @@ class Program:
                 # TODO::Determine if this is possible to remove element from set
                 self.unresolved_symbols.remove(unres_iter)
         
-        if not len(self.unresolve_symbols) == 0:
-            logging.warning("Unresolved Symbols Remaining: ", self.unresolve_symbols)
+        if not len(self.unresolved_symbols) == 0:
+            logging.warning("Unresolved Symbols Remaining: ", self.unresolved_symbols)
 
     def install_harness(self, harness):
         """ Install a harness that sets up the symbolic environment before alling main
@@ -271,12 +286,14 @@ class Program:
           Output -
             module (executable image object) - exectuable image obj of loaded module
         """
-        module = load_module(module_file)
+        module = self.load_module(module_file)
         self.main_module = module
         # must define executable image entry point, TODO::define stub ExectuableImage
         set_entry_address = module.get_entry_point()
-        install_stubs()
+        self.install_stubs()
         return module
+    
+    
 
     """
         TODO:: Implement the following functions
