@@ -2,10 +2,10 @@ import logging as logger
 import stats_tracker 
 import options
 import sys
-sys.path.append('ssl')
-import Architecture
 import time
 
+sys.path.append('ssl')
+import Architecture
 
 version = '0.8.4-devl'
 activeAlgorithm = None

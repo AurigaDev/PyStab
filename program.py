@@ -1,6 +1,8 @@
 import logging
 import sys
 
+from loader.pe.pe_module import PEModule
+
 class Program:
     program_instance = None
     
@@ -127,12 +129,12 @@ class Program:
 
         try:
             # TODO::Define Windows object file class
-            module = new PEModule(module_file, get_arch())
+            module = PEModule(module_file, get_arch())
             _target_os = target_os.WINDOWS
         except:
             try:
                 # TODO::Define object file class
-                module = new ObjectFile(moduleFile, get_arch())
+                module = ObjectFile(moduleFile, get_arch())
             except:
                 # TODO::Define raw module class
                 module = RawModule(module_file, get_arch())
@@ -151,7 +153,7 @@ class Program:
         self.resolve_symbols()
         return module
 
-    def is_stub(self, abs_addr)
+    def is_stub(self, abs_addr):
         """ TODO::Understand what this function is doing and weather this is instance or not
         """
         return abs_addr.get_value() >= stub_provider.STUB_BASE

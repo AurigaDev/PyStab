@@ -1,3 +1,5 @@
+import program
+
 import logging as logger
 
 class SingletonHolder:
