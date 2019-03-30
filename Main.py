@@ -4,6 +4,8 @@ import options
 import sys
 import time
 import program
+import os
+
 
 sys.path.append('ssl')
 import Architecture
@@ -12,7 +14,14 @@ version = '0.8.4-devl'
 activeAlgorithm = None
 mainThread = None
 
-
+def get_base_filename(file):
+    base_filename = os.path.abspath(file)    
+    if '.' in base_filename:
+        dotindex = base_filename.rindex('.')
+        if dotindex > 0:
+            base_filename = base_filename[0:dotindex]
+    return base_filename
+            
 def logBanner():
     logger.error('30') # Will fix later
     logger.error("   Jakstab " + version)
@@ -43,7 +52,35 @@ def main():
     
     overallStartTime = time.time()
     _program = program.create_program(arch)
+    mainfile = os.path.abspath(opts.mainFilename)
+    
+    basefilename = None
+    
+    try:
 
+        logger.warning("Parsing " + opts.mainFilename + "...") 
+        _program.load_main_module(mainfile)
+        
+        if basefilename == None:
+            basefilename = get_base_filename(mainfile)
+            
+    except OSError as e:
+        logger.critical('File not found: ',e)
+        return
+        
+    except IOError as e:
+        logger.critical('IOException while parsing executable!',e)
+        return        
+        
+    except Exception as e:
+        logger.critical('Error during parsing',e)
+        return
+
+    logger.info('Finished parsing executable')     
+    
+    if opts.startAddress > 0:
+        logger.log("Setting start address to 0x" + hex(opts.startAddress)) 
+        
 if __name__ == "__main__":
     main()
 

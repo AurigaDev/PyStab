@@ -2,6 +2,24 @@ import logging
 import sys
 
 from loader.pe.pe_module import PEModule
+from enum import Enum
+
+class TargetOS(Enum):
+    WINDOWS = 1
+    LINUX = 2
+    UNKNOWN = 3
+    
+def create_program(arch):
+    """ Initailize program with architecture object
+          Input -
+            arch (Architecture obj) - physical architecture program runs on
+                                      encapsulates all specifics of analysis 
+          Output -
+            program_instance (Program obj) - Project interface handle
+    """
+    program_instance = Program(arch)
+    return program_instance
+
 
 class Program:
     program_instance = None
@@ -49,17 +67,6 @@ class Program:
     #                       Core Logic
     #############################################################
 
-    def create_program(arch):
-        """ Initailize program with architecture object
-          Input -
-            arch (Architecture obj) - physical architecture program runs on
-                                      encapsulates all specifics of analysis 
-          Output -
-            program_instance (Program obj) - Project interface handle
-        """
-        program_instance = Program(arch)
-        return program_instance
-
     def __init__(self, arch):
         """ Instance method that initalizes a program object, constructor
           Input -
@@ -72,7 +79,7 @@ class Program:
         self.arch = arch
 
         # must define target_os module unknown
-        self.target_os = target_os.unknown
+        self.target_os = TargetOS.UNKNOWN
         
         # list of executable images
         self.modules = []
