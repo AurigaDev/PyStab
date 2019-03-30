@@ -38,15 +38,14 @@ class Win32StubLibrary(StubProvider):
     stubDir =  Options.jakstabHome + "/stubs/win32/"
     jakstab_internal = "jakstab.dll"
     def __init__(self, arch):
-        
         self.code = None
-        self.stubMap = {}
-        self.activeStubs = {}
-	     self.addressMap = {}
-        self.impId = 0
-        self.loadedDefFiles = ''
-	     self.arg0 = expression_factory.create_memory_location(expression_factory.create_plus(arch.stack_pointer(), expression_factory.create_number(4, 32)), 32)
-	     self.arg1 = expression_factory.create_memory_location(expression_factory.create_plus(arch.stack_pointer(), expression_factory.create_number(8, 32)), 32)
+        self.stub_map = {}
+        self.active_stubs = {}
+        self.address_map = {}
+        self.imp_id = 0
+        self.loaded_def_files = ''
+        self.arg0 = expression_factory.create_memory_location(expression_factory.create_plus(arch.stack_pointer(), expression_factory.create_number(4, 32)), 32)
+        self.arg1 = expression_factory.create_memory_location(expression_factory.create_plus(arch.stack_pointer(), expression_factory.create_number(8, 32)), 32)
         self.symFinder = None
         self.arch = arch
         # TODO::Define functions in arg0
