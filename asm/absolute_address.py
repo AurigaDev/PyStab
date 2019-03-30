@@ -1,3 +1,5 @@
+from asm.address import Address
+
 class AbsoluteAddress(Address):
     value = None
 
