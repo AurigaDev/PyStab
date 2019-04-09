@@ -1,6 +1,8 @@
 
+from .abstract_coff_module import AbstractCOFFModule
 
-class PEModule:
+#Class inheritance 
+class PEModule(AbstractCOFFModule):
     def __init__(self, pe_file, arch):
         self.pe_file = pe_file
         self.arch = arch

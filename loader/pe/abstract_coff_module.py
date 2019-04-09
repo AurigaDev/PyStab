@@ -1,5 +1,7 @@
 import logging as logger
-from executable_image import ExecutableImage
+
+from .executable_image import ExecutableImage
+
 class AbstractCOFFModule(ExecutableImage):
     def __init__(self):
         self.binary_file_handler = None

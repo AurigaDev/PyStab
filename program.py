@@ -4,6 +4,8 @@ import sys
 from loader.pe.pe_module import PEModule
 from enum import Enum
 from loader.elf.elf_module import ELFModule
+from loader.pe.abstract_coff_module import AbstractCOFFModule
+from loader.win32_stub_library import Win32StubLibrary
 
 class TargetOS(Enum):
     WINDOWS = 1
@@ -182,6 +184,7 @@ class Program:
         return module.is_import_area(abs_addr)
     
     def install_stubs(self):
+        print(type(self.main_module)) 
         if isinstance(self.main_module, AbstractCOFFModule):
             # TODO:: Define AbstractCOFFModule
             self.stub_library = Win32StubLibrary(self.arch)

@@ -80,7 +80,8 @@ def main():
     
     if opts.startAddress > 0:
         logger.log("Setting start address to 0x" + hex(opts.startAddress)) 
-        
+        _program.set_entry_address(absolute_address(opt.startAddress.getValue()))
+            
 if __name__ == "__main__":
     main()
 
