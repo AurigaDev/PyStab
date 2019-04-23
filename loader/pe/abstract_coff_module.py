@@ -24,7 +24,7 @@ class AbstractCOFFModule(ExecutableImage):
     def is_code_area(self,va):
         section = self.get_section_number(va)
         if section < 0 :
-            return false
+            return False
         else:
             return is_code_section(section)
     
@@ -42,7 +42,7 @@ class AbstractCOFFModule(ExecutableImage):
             for i in range(self.get_number_of_sections()):
                 if self.get_section_header(i).pointer_to_raw_data <= input and self.get_section_header(i).pointer_to_raw_data + self.get_section_header(i).size_of_raw_data > input:
                     return i
-            return -1;
+            return -1
 
     def get_section_number_rva(rva):
         raise Exception("function not defined")
